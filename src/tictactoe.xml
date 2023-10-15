@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
   <gresource prefix="tictactoe">
+    <file>images/Board.png</file>
+    <file>images/O.png</file>
+    <file>images/X.png</file>
+    <file>images/E.png</file>
+    <file>images/I.png</file>
+    <file>images/N.png</file>
+    <file>images/T.png</file>
+    <file>images/W.png</file>
     <file>src/tictactoe.ui</file>
   </gresource>
 </gresources>

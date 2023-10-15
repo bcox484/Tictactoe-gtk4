@@ -46,39 +46,39 @@ void end_game(ImageContainer *container) {
 
     if (!check_tie()) {
         if (g_turn) {
-            gtk_image_set_from_file(GTK_IMAGE(container->images[1]),
-                                    "images/O.png");
-            gtk_image_set_from_file(GTK_IMAGE(container->images[3]),
-                                    "images/W.png");
-            gtk_image_set_from_file(GTK_IMAGE(container->images[4]),
-                                    "images/I.png");
-            gtk_image_set_from_file(GTK_IMAGE(container->images[5]),
-                                    "images/N.png");
+            gtk_image_set_from_resource(GTK_IMAGE(container->images[1]),
+                                        "/tictactoe/images/O.png");
+            gtk_image_set_from_resource(GTK_IMAGE(container->images[3]),
+                                        "/tictactoe/images/W.png");
+            gtk_image_set_from_resource(GTK_IMAGE(container->images[4]),
+                                        "/tictactoe/images/I.png");
+            gtk_image_set_from_resource(GTK_IMAGE(container->images[5]),
+                                        "/tictactoe/images/N.png");
         } else {
-            gtk_image_set_from_file(GTK_IMAGE(container->images[1]),
-                                    "images/X.png");
-            gtk_image_set_from_file(GTK_IMAGE(container->images[3]),
-                                    "images/W.png");
-            gtk_image_set_from_file(GTK_IMAGE(container->images[4]),
-                                    "images/I.png");
-            gtk_image_set_from_file(GTK_IMAGE(container->images[5]),
-                                    "images/N.png");
+            gtk_image_set_from_resource(GTK_IMAGE(container->images[1]),
+                                        "/tictactoe/images/X.png");
+            gtk_image_set_from_resource(GTK_IMAGE(container->images[3]),
+                                        "/tictactoe/images/W.png");
+            gtk_image_set_from_resource(GTK_IMAGE(container->images[4]),
+                                        "/tictactoe/images/I.png");
+            gtk_image_set_from_resource(GTK_IMAGE(container->images[5]),
+                                        "/tictactoe/images/N.png");
         }
     } else {
-        gtk_image_set_from_file(GTK_IMAGE(container->images[3]),
-                                "images/T.png");
-        gtk_image_set_from_file(GTK_IMAGE(container->images[4]),
-                                "images/I.png");
-        gtk_image_set_from_file(GTK_IMAGE(container->images[5]),
-                                "images/E.png");
+        gtk_image_set_from_resource(GTK_IMAGE(container->images[3]),
+                                    "/tictactoe/images/T.png");
+        gtk_image_set_from_resource(GTK_IMAGE(container->images[4]),
+                                    "/tictactoe/images/I.png");
+        gtk_image_set_from_resource(GTK_IMAGE(container->images[5]),
+                                    "/tictactoe/images/E.png");
     }
     g_turn = true;
 }
 
 void change_picture(GtkWidget *image, char g_turn) {
     char file_path[50];
-    snprintf(file_path, sizeof(file_path), "images/%c.png", g_turn);
-    gtk_image_set_from_file(GTK_IMAGE(image), file_path);
+    snprintf(file_path, sizeof(file_path), "/tictactoe/images/%c.png", g_turn);
+    gtk_image_set_from_resource(GTK_IMAGE(image), file_path);
 }
 
 bool check_win() {
