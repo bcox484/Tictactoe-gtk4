@@ -15,4 +15,4 @@ main.o: src/main.c
 	${CC} ${CFLAGSLIBS} -o build/main.o -c src/main.c
 	
 clean:
-	rm ${PROG} build/*
+	rm ${PROG} build/*.o
