@@ -2,7 +2,7 @@
  * This file is part of Tictactoe-gtk4.
  * Copyright (C) 2023 Benjamin Cox
  *
- * *program name* is free software: you can redistribute it and/or modify
+ * Tictactoe-gtk4 is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
@@ -35,6 +35,7 @@ void restart_game(GtkWidget *btn, gpointer container) {
         g_moves[i] = UNOCCUPIED;
     }
     g_finished = false;
+    g_turn = true;
 }
 
 void end_game(ImageContainer *container) {
