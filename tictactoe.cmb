@@ -5,7 +5,7 @@
 	(1,None,"tictactoe.ui","tictactoe.ui",None,None,None,None,None,None,None)
   </ui>
   <ui_library>
-	(1,"gtk","4.12",None)
+	(1,"gtk","4.0",None)
   </ui_library>
   <object>
 	(1,1,"GtkApplicationWindow","window",None,None,None,None,None,None),

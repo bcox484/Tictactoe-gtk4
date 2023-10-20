@@ -2,7 +2,7 @@
 <!-- Created with Cambalache 0.16.0 -->
 <interface>
   <!-- interface-name tictactoe.ui -->
-  <requires lib="gtk" version="4.12"/>
+  <requires lib="gtk" version="4.0"/>
   <object class="GtkApplicationWindow" id="window">
     <property name="default-height">-1</property>
     <property name="default-width">-1</property>
