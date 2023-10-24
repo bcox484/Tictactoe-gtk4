@@ -76,9 +76,9 @@ void end_game(ImageContainer *container) {
     g_turn = true;
 }
 
-void change_picture(GtkWidget *image, char g_turn) {
+void change_picture(GtkWidget *image, char turn) {
     char file_path[50];
-    snprintf(file_path, sizeof(file_path), "/tictactoe/images/%c.png", g_turn);
+    snprintf(file_path, sizeof(file_path), "/tictactoe/images/%c.png", turn);
     gtk_image_set_from_resource(GTK_IMAGE(image), file_path);
 }
 
