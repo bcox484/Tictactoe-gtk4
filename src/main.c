@@ -22,14 +22,17 @@ static void activate(GtkApplication *app, gpointer user_data) {
     GtkBuilder *bd = gtk_builder_new();
     GtkWidget *buttons[9];
     GtkWidget *restart_button, *close_button;
-    /* Stores GtkWidgets for images and the application window so they can
+    GtkWidget *window;
+    GtkWidget *box;
+    GtkWidget *pcon, *human;
+
+    /* Stores GtkWidgets for images and so they can
      * be passed to other functions through G_CALLBACK */
     ImageContainer *container = calloc(1, sizeof(ImageContainer));
     gtk_builder_add_from_resource(bd, "/tictactoe/src/tictactoe.ui", NULL);
 
-    container->window = GTK_WIDGET(gtk_builder_get_object(bd, "window"));
-    gtk_window_set_application(GTK_WINDOW(container->window), app);
-
+    window = GTK_WIDGET(gtk_builder_get_object(bd, "window"));
+    gtk_application_add_window(app, GTK_WINDOW(window));
     /* Initializes the 9 buttons and images for the tictactoe board */
     for (int i = 0; i < 9; i++) {
         char string_num[10];
@@ -39,24 +42,28 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
         snprintf(string_num, sizeof(string_num), "button%d", i + 1);
         buttons[i] = GTK_WIDGET(gtk_builder_get_object(bd, string_num));
-        g_signal_connect(buttons[i], "clicked", G_CALLBACK(make_move),
+        g_signal_connect(buttons[i], "clicked", G_CALLBACK(button_handler),
                          container);
     }
+
+    pcon = GTK_WIDGET(gtk_builder_get_object(bd, "pcon"));
+    human = GTK_WIDGET(gtk_builder_get_object(bd, "human"));
+    g_signal_connect(pcon, "clicked", G_CALLBACK(pc_enable), container);
+    g_signal_connect(human, "clicked", G_CALLBACK(human_enable), container);
 
     restart_button = GTK_WIDGET(gtk_builder_get_object(bd, "restart"));
     close_button = GTK_WIDGET(gtk_builder_get_object(bd, "close"));
 
     g_signal_connect(close_button, "clicked", G_CALLBACK(quit_application),
-                     container->window);
+                     window);
 
     g_signal_connect(restart_button, "clicked", G_CALLBACK(restart_game),
                      container);
 
     /* Free ImageContainer when application window is destroyed */
-    g_signal_connect(container->window, "destroy", G_CALLBACK(free_image_ptr),
-                     container);
+    g_signal_connect(window, "destroy", G_CALLBACK(free_image_ptr), container);
 
-    gtk_window_present(GTK_WINDOW(container->window));
+    gtk_window_present(GTK_WINDOW(window));
     g_object_unref(bd);
 }
 

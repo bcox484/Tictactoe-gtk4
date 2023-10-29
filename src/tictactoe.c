@@ -17,15 +17,47 @@
  */
 
 #include "tictactoe.h"
+#include <stdbool.h>
+#include <stdlib.h>
 
 bool g_finished = false; /* Determines if game is over */
 bool g_turn = true;      /* Determines whos turn it is, true for O */
+bool g_pc = true;
+bool g_incomplete = false; /* Mutex lock */
 
 /* Representation of tictactoe board as an array */
 int g_moves[9] = {UNOCCUPIED};
 
 void quit_application(GtkWidget *btn, gpointer window) {
     gtk_window_close(GTK_WINDOW(window));
+}
+
+void button_handler(GtkWidget *btn, gpointer container) {
+    ImageContainer *images = (ImageContainer *)container;
+
+    /* Determines which button is clicked from button label */
+    const char *label = gtk_button_get_label(GTK_BUTTON(btn));
+    int move = atoi(label) - 1;
+
+    if (!g_pc) {
+        make_move(images, move);
+    } else {
+        while (g_incomplete) { /* Primitive Mutex */
+            continue;
+        }
+        make_move(images, move);
+    }
+}
+
+void human_enable(GtkWidget *btn) { g_pc = false; }
+
+void pc_enable(GtkWidget *btn, gpointer container) {
+    g_pc = true;
+    if (!g_turn) {
+        GThread *thread;
+        thread = g_thread_new("toe", (GThreadFunc)computer_move, container);
+        g_thread_unref(thread);
+    }
 }
 
 void restart_game(GtkWidget *btn, gpointer container) {
@@ -153,15 +185,30 @@ bool repeat_move(int move) {
     return repeat;
 }
 
-void make_move(GtkWidget *btn, gpointer imgs) {
-    ImageContainer *images = (ImageContainer *)imgs;
-
-    /* Determines which button is clicked from button label */
-    const char *label = gtk_button_get_label(GTK_BUTTON(btn));
-    int move = atoi(label) - 1;
-
+void make_move(ImageContainer *images, int move) {
     /* Sets move, adds image to correct square, checks game*/
-    if (g_turn && !(repeat_move(move)) && !g_finished) {
+    if (!g_pc) {
+        if (g_turn && !(repeat_move(move)) && !g_finished) {
+            g_moves[move] = O_OCCUPIED_POS;
+            change_picture(images->images[move], 'O');
+            if (check_game()) {
+                end_game(images);
+                return;
+            }
+            g_turn = false;
+
+        } else if (!(repeat_move(move)) && !g_finished) {
+            g_moves[move] = X_OCCUPIED_POS;
+            change_picture(images->images[move], 'X');
+            if (check_game()) {
+                end_game(images);
+                return;
+            }
+            g_turn = true;
+        }
+
+    } else if (g_pc && g_turn && !(repeat_move(move))) {
+        GThread *thread;
         g_moves[move] = O_OCCUPIED_POS;
         change_picture(images->images[move], 'O');
         if (check_game()) {
@@ -170,15 +217,36 @@ void make_move(GtkWidget *btn, gpointer imgs) {
         }
         g_turn = false;
 
-    } else if (!(repeat_move(move)) && !g_finished) {
-        g_moves[move] = X_OCCUPIED_POS;
-        change_picture(images->images[move], 'X');
-        if (check_game()) {
-            end_game(images);
-            return;
-        }
-        g_turn = true;
+        thread = g_thread_new("toe", (GThreadFunc)computer_move, images);
+        g_thread_unref(thread);
     }
 }
 
-void free_image_ptr(GtkWidget *btn, gpointer imgs) { free(imgs); }
+void random_unoccupied_space(unsigned int *random_move) {
+    do {
+        *random_move = g_random_int() % 9;
+    } while (g_moves[*random_move] != UNOCCUPIED);
+    ;
+}
+
+void computer_move(gpointer container) {
+    g_incomplete = true;
+    g_usleep(G_USEC_PER_SEC / 2);
+
+    ImageContainer *images = (ImageContainer *)container;
+    unsigned int random_move = 0;
+    random_unoccupied_space(&random_move);
+
+    g_moves[random_move] = X_OCCUPIED_POS;
+    change_picture(images->images[random_move], 'X');
+    if (check_game()) {
+        end_game(images);
+        g_incomplete = false;
+        g_thread_exit(NULL);
+    }
+    g_turn = true;
+    g_incomplete = false;
+    g_thread_exit(NULL);
+}
+
+void free_image_ptr(GtkWidget *window, gpointer imgs) { free(imgs); }

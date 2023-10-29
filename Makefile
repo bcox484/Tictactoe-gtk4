@@ -2,8 +2,8 @@ PROG = tictactoe
 CC = gcc
 CFLAGS =`pkg-config --cflags gtk4`
 LIBS = `pkg-config --libs gtk4`
-
-${PROG}: main.o resources.o ${PROG}.o
+OBJS = main.o resources.o ${PROG}.o
+${PROG}: ${OBJS}
 		${CC} ${CFLAGS} -o ${PROG} build/resources.o build/${PROG}.o build/main.o ${LIBS}
 
 resources.o: src/resources.c
