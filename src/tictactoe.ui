@@ -38,6 +38,7 @@
               <object class="GtkImage" id="board">
                 <property name="resource">/tictactoe/images/Board.png</property>
                 <property name="pixel-size">750</property>
+                <property name="margin-bottom">5</property>
               </object>
             </child>
             <child>
@@ -195,7 +196,7 @@
                     <property name="margin-bottom">5</property>
                     <property name="margin-end">5</property>
                     <property name="margin-start">5</property>
-                    <property name="margin-top">10</property>
+                    <property name="margin-top">5</property>
                   </object>
                 </child>
                 <child>
@@ -207,7 +208,7 @@
                     <property name="margin-bottom">5</property>
                     <property name="margin-end">5</property>
                     <property name="margin-start">5</property>
-                    <property name="margin-top">10</property>
+                    <property name="margin-top">5</property>
                     <property name="width-request">90</property>
                   </object>
                 </child>

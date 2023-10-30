@@ -20,8 +20,8 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-bool g_finished = false; /* Determines if game is over */
-bool g_turn = true;      /* Determines whos turn it is, true for O */
+bool g_finished = false;
+bool g_turn = true; /* Determines whos turn it is, true for O */
 bool g_pc = true;
 bool g_incomplete = false; /* Mutex lock */
 
@@ -45,7 +45,9 @@ void button_handler(GtkWidget *btn, gpointer container) {
         while (g_incomplete) { /* Primitive Mutex */
             continue;
         }
-        make_move(images, move);
+        if (!g_finished) {
+            make_move(images, move);
+        }
     }
 }
 
@@ -60,22 +62,27 @@ void pc_enable(GtkWidget *btn, gpointer container) {
     }
 }
 
+void clear_images(ImageContainer *images) {
+    for (int i = 0; i < 9; i++) {
+        gtk_image_clear(GTK_IMAGE(images->images[i]));
+    }
+}
+
 void restart_game(GtkWidget *btn, gpointer container) {
     ImageContainer *con = (ImageContainer *)container;
+    clear_images(con);
+
     for (int i = 0; i < 9; i++) {
-        gtk_image_clear(GTK_IMAGE(con->images[i]));
         g_moves[i] = UNOCCUPIED;
     }
+
     g_finished = false;
     g_turn = true;
 }
 
 void end_game(ImageContainer *container) {
     g_finished = true;
-
-    for (int i = 0; i < 9; i++) {
-        gtk_image_clear(GTK_IMAGE(container->images[i]));
-    }
+    clear_images(container);
 
     if (!check_tie()) {
         if (g_turn) {
@@ -207,7 +214,7 @@ void make_move(ImageContainer *images, int move) {
             g_turn = true;
         }
 
-    } else if (g_pc && g_turn && !(repeat_move(move))) {
+    } else if (g_pc && g_turn && !(repeat_move(move)) && !g_finished) {
         GThread *thread;
         g_moves[move] = O_OCCUPIED_POS;
         change_picture(images->images[move], 'O');

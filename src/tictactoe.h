@@ -28,6 +28,5 @@ void pc_enable(GtkWidget *btn, gpointer container);
 void free_image_ptr(GtkWidget *btn, gpointer imgs);
 void computer_move(gpointer container);
 void clear_images(ImageContainer *images);
-int computer_random_num();
 
 #endif
